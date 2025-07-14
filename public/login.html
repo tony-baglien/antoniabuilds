@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Wake me up!</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  </head>
+  <body class="w-screen h-screen flex flex-col items-center justify-center">
+    <div class="text-center mb-8">
+      <h1>Welcome to the Packet Sender</h1>
+      <h3>Please log-in</h3>
+    </div>
+    <form x-data="{
+      credentials: {
+        username: '',
+        password: ''
+      },
+      async onSubmit() {
+        try {
+          const response = await fetch('/auth/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(this.credentials)
+          });
+
+          const data = await response.json();
+          console.log(data)
+          if (data.success) {
+              window.location.href = data.redirectUrl || '/dashboard';
+          } else {
+            alert(data.message);
+          }
+        } catch (error) {
+          console.error('HTTP error:', error);
+        }
+      }
+    }"
+      class="flex flex-col items-center justify-center gap-4"
+      @submit.prevent="onSubmit()"
+      >
+      <div class="flex items-center">
+        <label class="w-20 mr-2" for="uname">Username</label>
+        <input x-model="credentials.username" class="outline-solid rounded" type="text" name="uname" required>
+      </div>
+      <div class="flex items-center">
+        <label class="w-20 mr-2" for="psw">Password</label>
+        <input x-model="credentials.password" class="outline-solid rounded" type="password" name="psw" required>
+      </div>
+      <button class="self-start outline-solid rounded px-4" type="submit">Login</button>
+    </form>
+  </body>
+</html>

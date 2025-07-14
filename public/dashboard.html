@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link rel="stylesheet" href="./css/main.css">
+  <title>Dashboard</title>
+</head>
+  <body class="h-dvh w-dvw flex flex-col items-center justify-center bg-gradient-to-br from-pink-300 via-purple-300 to-indigo-400 orbitron-600">
+  <div class="button-container w-fit flex flex-col bg-rose-50 rounded shadow-xl p-4 ">
+    <button id="checkStatus" class="flex items-center justify-between p-2 mb-2 border border-slate-400 hover:border-rose-300 rounded min-w-[140px] transition-colors cursor-pointer">
+      <span class="indicator size-2 bg-pink-400 rounded-full flex-shrink-0"></span>
+      <span class="flex-1 text-center">Check Status</span>
+      <span class="size-2 opacity-0 flex-shrink-0"></span>
+    </button>
+    <button id="powerOff"class="flex items-center justify-between gap-2 p-2 my-2 border border-slate-400 hover:border-rose-300 rounded min-w-[140px] transition-colors cursor-pointer">
+      <span class="indicator size-2 bg-pink-400 rounded-full flex-shrink-0"></span>
+      <span class="flex-1 text-center">Power off PC</span>
+      <span class="size-2 opacity-0 flex-shrink-0"></span>
+    </button>
+    <button id="powerOn" class="flex items-center justify-between gap-2 p-2 my-2 border border-slate-400 hover:border-rose-300 rounded min-w-[140px] transition-colors cursor-pointer">
+      <span class="indicator size-2 bg-pink-400 rounded full flex-shrink-0"></span>
+      <span class="flex-1 text-center">Power on PC</span>
+      <span class="size-2 opacity flex-shrink-0"></span>
+    </button>
+    <button id="cycle" class="flex items-center justify-between gap-2 p-2 mt-2 border border-slate-400 hover:border-rose-300 rounded min-w-[140px] transition-colors cursor-pointer">
+      <span class="indicator size-2 bg-pink-400 rounded full flex-shrink-0"></span>
+      <span class="flex-1 text-center">Cycle PC</span>
+      <span class="size-2 opacity flex-shrink-0"></span>
+    </button>
+  </div>
+  <div id="statusDisplay" class="status-display flex items-center justify-center mt-4 p-8 min-h-12 rounded-md bg-clip-padding backdrop-filter backdrop-blur-xl bg-opacity-10 shadow-xl ">This is some test text!</div>
+  <script>
+    function showStatus(message){
+      const statusDisplay = document.getElementById("statusDisplay");
+      statusDisplay.innerText = `${new Date().toLocaleTimeString()}:${message}`
+    }
+    function buttonHelper(opts){
+      const {id,action, label} = opts;
+      const btn = document.getElementById(id);
+      const indicator = btn.querySelector('.indicator')
+      btn.addEventListener("click",async()=>{
+        indicator.className = "size-2 bg-yellow-400 rounded-full"
+        try {
+          const response = await fetch(`/run-script/${action}`,{
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            }
+          })
+          const result = await response.json();
+          if (response.ok) {
+            indicator.className = "size-2 bg-green-500 rounded-full"
+            showStatus(`${label} completed successfully: ${result.message}`)
+          } else {
+            indicator.className = "size-2 bg-red-500 rounded-full"
+            showStatus(`${label} failed: ${ result.error || 'unknown error'}`)
+          }
+        } catch(error) {
+          indicator.className = "size-2 bg-red-500 rounded-full"
+          console.log("Error",error)
+          showStatus(`${label} failed: Network Error`)
+        }
+
+        setTimeout(()=>{
+          indicator.className = "size-2 bg-pink-400 rounded-full"
+        },3000)
+      })
+    }
+    const idActions = [
+      {"id": "checkStatus","action":"status","label":"Status Check"},
+      {"id":"powerOff","action":"off", "label":"Power Off Sequence"},
+      {"id":"powerOn","action":"on", "label":"Power On Sequence"},
+      {"id":"cycle","action":"cycle", "label":"Power Cycle Sequence"}
+      ]
+    idActions.forEach(el => {
+      buttonHelper(el)
+    })
+  </script>
+</body>
+</html>

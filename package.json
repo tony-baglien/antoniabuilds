@@ -1,0 +1,32 @@
+{
+  "name": "antoniabuilds-dev",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "nodemon app.js",
+    "client": "cd frontend && npm run dev",
+    "build": "cd frontend && npm run build",
+    "start": "NODE_ENV=production node app.js",
+    "setup": "npm install && cd frontend && npm install",
+    "db:init": "node database/init.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@tailwindcss/cli": "^4.1.10",
+    "@tailwindcss/postcss": "^4.1.10",
+    "bcrypt": "^6.0.0",
+    "concurrently": "^9.2.0",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "express-session": "^1.18.1",
+    "nodemon": "^3.1.10",
+    "postcss": "^8.5.5",
+    "redis": "^5.1.0",
+    "sqlite3": "^5.1.7",
+    "tailwindcss": "^4.1.10"
+  }
+}
