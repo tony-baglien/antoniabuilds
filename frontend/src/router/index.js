@@ -5,7 +5,15 @@ import authRoutes from "./routes/auth";
 import dashboardRoutes from "./routes/dashboard";
 import publicRoutes from "./routes/public";
 
-const routes = [...authRoutes, ...dashboardRoutes, ...publicRoutes];
+// Views
+import NotFound from "../views/NotFound.vue";
+
+const routes = [
+  ...authRoutes,
+  ...dashboardRoutes,
+  ...publicRoutes,
+  { path: "/:pathMatch(.*)", component: NotFound, name: "notfound" },
+];
 
 const router = createRouter({
   history: createWebHistory(),
