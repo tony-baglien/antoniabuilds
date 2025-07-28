@@ -34,6 +34,13 @@ jobs:
         key: ${{ secrets.KEY }}
         port: ${{ secrets.PORT }}
         script: |
+          nvm use --lts
+          echo "Node .js version: $(node --version)"
+          # Check if PM2 is installed, install if not
+          if ! command -v pm2 &> /dev/null; then
+            echo "PM2 not found, installing..."
+            npm install -g pm2
+          fi
           cd /var/www/antoniabuilds.dev
           git pull origin main
           npm ci --only=production
