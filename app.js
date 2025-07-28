@@ -10,6 +10,8 @@ const getUser = require("./database/methods/getUser.js");
 const app = express();
 const PORT = 3000;
 
+//Adding this as a test
+
 console.log("Starting server...");
 
 // Middleware
