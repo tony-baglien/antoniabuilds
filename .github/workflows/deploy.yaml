@@ -5,37 +5,17 @@ on:
     branches: [ main ]
 
 jobs:
-  deploy:
+  run_example_job:
     runs-on: ubuntu-latest
-    
+    timeout-minutes: 5
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
+    - name: print out example job
+      uses: appleboy/ssh-action@v0.1.10
       with:
-        node-version: 'lts/*'
-        cache: 'npm'
-    
-    - name: Install dependencies
-      run: | 
-        npm ci
-        cd frontend && npm ci
-    
-    - name: Build frontend
-      run: npm run build
-    
-    - name: Deploy to server
-      if: github.ref == 'refs/heads/main'
-      uses: appleboy/ssh-action@v1.0.0
-      with:
-        host: ${{ secrets.HOST }}
+        host: ${{ inputs.hostname }}
         username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.PRIVATE_KEY }}
+        key: ${{ secrets.KEY }}
         port: ${{ secrets.PORT }}
-        script: |
-          cd /var/www/antoniabuilds.dev
-          git pull origin main
-          npm ci --only=production
-          npm run build
-          pm2 restart antoniabuilds || pm2 start app.js --name antoniabuilds
+        command_timeout: 30m
+        script: | 
+          echo "Nice Job!!!"
