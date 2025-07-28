@@ -34,8 +34,13 @@ jobs:
         key: ${{ secrets.KEY }}
         port: ${{ secrets.PORT }}
         script: |
-          nvm use --lts
-          echo "Node .js version: $(node --version)"
+          # Source nvm properly
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+      
+          # Use Node.js 20
+          nvm use 20 || (nvm install 20 && nvm use 20)
+          echo "Node.js version: $(node --version)"
           # Check if PM2 is installed, install if not
           if ! command -v pm2 &> /dev/null; then
             echo "PM2 not found, installing..."
