@@ -11,6 +11,7 @@ const app = express();
 const PORT = 3000;
 
 //Adding this as a test
+console.log("this is a test");
 
 console.log("Starting server...");
 
