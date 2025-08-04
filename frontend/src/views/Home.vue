@@ -1,10 +1,10 @@
 <template>
-  <h1>Welcome to the homepage</h1>
+  <h1 class="text font-header">Welcome to the homepage</h1>
 </template>
 
 <script>
-  export default {
-    name:"Home",
-    
-  }
+export default {
+  name: "Home",
+
+}
 </script>
