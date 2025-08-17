@@ -1,5 +1,5 @@
 <template>
-  <div id="app" class="bg-linear-(--gradient-main) ">
+  <div id="app" class="bg-linear-(--gradient-main)">
     <router-view />
   </div>
 </template>
