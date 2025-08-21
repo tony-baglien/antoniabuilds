@@ -13,6 +13,7 @@
 
   --gradient-main: 90deg,var(--gradient-start), var(--gradient-middle) 51%, var(--gradient-end);
 }
+
 body {
   color: var(--color-text);
 }

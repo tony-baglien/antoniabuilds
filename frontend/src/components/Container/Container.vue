@@ -8,7 +8,7 @@ const props = defineProps({
 </script>
 <template>
   <div
-    class="container relative border-2 border-accent py-8 pl-14 pr-8 bg-gray-300/20 backdrop-blur-sm rounded-md m-auto">
+    class="w-full container relative border-2 border-accent border-x-transparent sm:border-x-accent py-8 px-4 sm:px-8 lg:pl-14 lg:pr-8 sm:bg-gray-300/20 sm:backdrop-blur-sm rounded-md m-auto">
     <slot></slot>
     <ul class="min-h-4 w-full absolute bottom-0 left-0 bg-accent text-right ">
       <li v-for="item in footerItems">

@@ -12,7 +12,7 @@ const props = defineProps({
 });
 </script>
 <template>
-  <a class="button font-header text-xl  px-8 border-solid border-3 transform transition-all duration-200 ease-in-out hover:-translate-y-0.5 opacity-85 hover:opacity-100"
+  <a class=" w-fit button font-header text-xl  px-8 border-solid border-3 transform transition-all duration-200 ease-in-out hover:-translate-y-0.5 opacity-85 hover:opacity-100"
     :href="props.link">{{ props.content
     }}</a>
 </template>

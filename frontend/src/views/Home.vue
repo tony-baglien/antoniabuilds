@@ -23,12 +23,12 @@ const gitLinks = {
 <template>
   <main>
     <Hero />
-    <section id="projects" class="flex flex-col gap-12 items-center justify-center px-[20%]
+    <section id="projects" class="flex flex-col gap-12 items-center justify-center lg:px-[20%]
       ">
       <Container>
         <ContainerHeader :link="gitLinks.antoniaBuilds" header="AntoniaBuilds.dev" />
         <ContainerSection header="Infrastructure Setup">
-          <div class="flex flex-col gap-2 ml-6">
+          <div class="flex flex-col gap-2 lg:ml-6">
             <Wrapper>
               <h2 class="font-header text-xl">Linode VPS</h2>
               <p>Provisioned Ubuntu 22.04 server</p>
@@ -47,7 +47,7 @@ const gitLinks = {
             </Wrapper>
           </div>
         </ContainerSection>
-        <div class="flex gap-8">
+        <div class="flex flex-col md:flex-row lg:gap-8">
           <ContainerSection header="Admin Authentication" :icons="[['fas', 'fa-database'], ['fab', 'fa-vuejs']]">
             <Wrapper>
               <p>Login interface with database validation and password hashing. Vue Router guards to protect admin
@@ -73,7 +73,7 @@ const gitLinks = {
         <ContainerSection header="React Meals">
           <p>A food ordering page where users can browse meals, add then to cart and place orders. All managed with a
             simple database back end.</p>
-          <div class="flex align-center gap-4 mt-4">
+          <div class="flex flex-col md:flex-row align-center gap-4 mt-4">
             <a :href="gitLinks.reactMeals"
               class="transform transition-all duration-200 ease-in-out hover:-translate-y-0.5 opacity-85 hover:opacity-100">
               <font-awesome-icon class="text-3xl" :icon="['fab', 'github']" />
@@ -86,7 +86,7 @@ const gitLinks = {
         <ContainerSection header="Keyworks">
           <p>A vibrant showcase for mechanical keyboard components - keycaps, switches, and full kits and advanced
             filtering</p>
-          <div class="flex align-center gap-4 mt-4">
+          <div class="flex flex-col md:flex-row align-center gap-4 mt-4">
             <a :href="gitLinks.keyworks"
               class="transform transition-all duration-200 ease-in-out hover:-translate-y-0.5 opacity-85 hover:opacity-100">
               <font-awesome-icon class="text-3xl" :icon="['fab', 'github']" />
@@ -98,7 +98,7 @@ const gitLinks = {
       <Container>
         <ContainerSection header="Hacktype">
           <p>A charming autotype page inspired by hackertyper.net. Have fun auto typing like a l33t h@x0r</p>
-          <div class="flex align-center gap-4 mt-4">
+          <div class="flex flex-col md:flex-row align-center gap-4 mt-4">
             <a :href="gitLinks.hacktype"
               class="transform transition-all duration-200 ease-in-out hover:-translate-y-0.5 opacity-85 hover:opacity-100">
               <font-awesome-icon class="text-3xl" :icon="['fab', 'github']" />

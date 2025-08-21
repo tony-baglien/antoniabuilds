@@ -1,12 +1,13 @@
 import { defineConfig } from "vite";
 import tailwindcss from "@tailwindcss/vite";
+import { templateCompilerOptions } from "@tresjs/core";
 import vue from "@vitejs/plugin-vue";
 import { fileURLToPath, URL } from "node:url";
 
 // https://vite.dev/config/
 /** @type {import('vite').UserConfig} */
 export default defineConfig({
-  plugins: [vue(), tailwindcss()],
+  plugins: [vue({ ...templateCompilerOptions }), tailwindcss()],
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
@@ -32,5 +33,8 @@ export default defineConfig({
   build: {
     outDir: "../public/dist",
     emptyOutDir: true,
+  },
+  optimizeDeps: {
+    include: ["three"],
   },
 });

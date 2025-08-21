@@ -1,67 +1,183 @@
 <script setup>
 import Button from './Button.vue'
+import { ref, onMounted, onUnmounted } from 'vue'
+import * as THREE from 'three';
+import { RoundedBoxGeometry} from 'three/addons/geometries/RoundedBoxGeometry.js'
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
+
+const canvasContainer = ref(null);
+let scene, camera, renderer, animationId, resizeObserver,controls,cube
+
+const setupLighting = () => {
+  const keyLight = new THREE.DirectionalLight(0xffffff,3)
+  keyLight.position.set(6,8,6);
+  scene.add(keyLight)
+}
+const setupGeometry = () => {
+  const geometry = new RoundedBoxGeometry(2,2,2,4,0.1);
+  const material = new THREE.MeshPhysicalMaterial({
+    color: 0xff6b9d,
+    roughness: 0.2,
+    iridescence: 1,
+    iridescenceThicknessRange: [500,300],
+    transmission: 0.95,
+    transparent: true,
+    opacity: 0.3,
+  })
+  const cube = new THREE.Mesh(geometry, material);
+  scene.add(cube)
+
+  return cube
+}
+const setupCamera = () => {
+  camera.position.z = 5
+}
+const setupControls = () => {
+  controls = new OrbitControls(camera, renderer.domElement)
+  controls.enableDamping = true
+  controls.dampingFactor = 0.02
+  controls.rotateSpeed = 0.5
+  controls.enableRotation = true
+  controls.enableZoom = false
+  controls.enablePan = false
+}
+const startAnimation = (meshes) => {
+  const animate = () => {
+      meshes.rotation.x += 0.01
+      meshes.rotation.y += 0.01
+    controls.update();
+    renderer.render(scene, camera);
+  }
+  renderer.setAnimationLoop(animate)
+}
+const setupResizeRenderer = () => {
+  resizeObserver = new ResizeObserver(() => {
+    resizeRenderer();
+  })
+  resizeObserver.observe(canvasContainer.value)
+}
+const resizeRenderer = () => {
+  if (!renderer){
+    return 
+  }
+  const width = canvasContainer.value.clientWidth;
+  const height = canvasContainer.value.clientHeight;
+
+  renderer.setSize(width,height);
+
+  if (camera){
+    camera.aspect = width /height
+    camera.updateProjectionMatrix();
+  }
+
+  if (scene){
+    renderer.render(scene, camera)
+  }
+
+}
+const initThree = () => {
+  // Set up Canvas, Camera, Renderer
+  const width = canvasContainer.value.clientWidth
+  const height = canvasContainer.value.clientHeight
+
+  scene = new THREE.Scene();
+  camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 1000);
+  renderer = new THREE.WebGLRenderer({ alpha: true });
+  renderer.setClearColor(0x000000,0)
+
+  renderer.setSize(width, height)
+  canvasContainer.value.appendChild(renderer.domElement)
+
+  setupLighting();
+  const meshes = setupGeometry();
+  setupCamera();
+  setupControls();
+  startAnimation(meshes);
+}
+
+const heroURLs = {
+  "github":"https://github.com/tony-baglien",
+  "linkedIn": "https://www.linkedin.com/in/tonibaglien/",
+  "email": "mailto:antonia.g.gray@gmail.com"
+}
+onMounted(() => {
+  initThree();
+  setupResizeRenderer();
+
+})
+
+onUnmounted(() => {
+  if (resizeObserver){
+    resizeObserver.disconnect();
+  }
+  if (controls){
+    controls.dispose();
+  }
+  if (renderer) {
+    renderer.setAnimationLoop(null);
+    renderer.dispose();
+  }
+})
 </script>
 
-<!-- TODO: Add Button Component and use it to make links -->
-<!-- TODO: Make Link component -->
-
-
 <template>
-  <section class="flex items-center justify-center flex-col w-full min-h-screen px-36 mb-12 bg-transparent">
-    <div class="w-full mb-12">
-      <h1 class="flex flex-col items-start relative font-header font-light">
-        <span class="text-[4rem] leading-16"> Hi! I'm</span>
-        <span class="text-[7rem] leading-24">Antonia</span>
-        <span class="text-[7rem] leading-24 ml-52">Gray</span>
+  <div>
+    <section class="flex items-center justify-center flex-col w-full lg:min-h-screen pt-8 px-4 sm:px-8 lg:px-36 mb-6 lg:mb-12 relative z-50 bg-transparent">
+      <div class="w-full mb-4 lg:mb-12">
+        <h1 class="flex flex-col items-start relative font-header font-light">
+          <span class="text-[3rem] leading-9 lg:text-[4rem] lg:leading-16"> Hi! I'm</span>
+          <span class="text-[5rem] leading-16 lg:text-[7rem] lg:leading-24">Antonia</span>
+          <span class="text-[5rem] leading-16 lg:text-[7rem] lg:leading-24 lg:ml-52">Gray</span>
 
-        <!-- Heart -->
-        <svg class="absolute top-5 left-[17rem]" width="55" height="58" viewBox="0 0 55 58" fill="none"
-          xmlns="http://www.w3.org/2000/svg">
-          <path
-            d="M25.2527 15.9345C25.2527 10.8287 24.3285 4.54153 19.2589 1.93612C13.8262 -0.859619 7.5024 3.0846 4.34049 7.47508C-2.94049 17.5752 2.94109 30.8516 9.97123 39.3373C14.2949 44.5547 19.9388 48.9583 22.17 55.5735C22.467 56.4595 25.0085 55.7376 24.718 54.891C22.8961 49.503 18.8299 45.4472 15.0342 41.3717C11.2386 37.2962 8.01731 32.9386 5.86536 27.859C3.71341 22.7794 2.73643 17.3061 4.4065 12.0887C5.23824 9.50954 6.7169 7.11413 8.71043 5.26343C10.4267 3.67524 12.7239 2.20519 15.1729 2.50708C18.0839 2.86147 20.2557 5.32906 21.3185 7.88853C22.3812 10.448 22.7047 13.4341 22.7047 16.2495C22.7047 17.2995 25.2527 16.7614 25.2527 15.9345Z"
-            stroke="black" />
-          <path
-            d="M25.3318 16.0526C28.0053 11.3667 32.3554 7.61941 37.3458 5.53902C39.7552 4.53492 42.3494 3.93115 44.97 3.94427C45.6235 3.94427 46.2836 3.98365 46.9305 4.0624C47.4784 4.13459 48.4422 4.14772 48.924 4.43648C49.4059 4.72524 49.901 5.47339 50.2311 5.95247C50.6337 6.53 50.9374 7.16002 51.142 7.82942C51.9143 10.3561 51.0496 13.014 49.8218 15.2519C48.4818 17.6867 46.6995 19.859 44.8842 21.9525C42.7124 24.4529 40.4087 26.8417 38.2699 29.375C36.1312 31.9082 33.9528 34.658 31.9263 37.4012C27.4904 43.4061 23.5099 49.7261 19.9849 56.2954C19.4172 57.352 21.9653 57.0829 22.3613 56.3479C25.6751 50.1658 29.3981 44.2002 33.5238 38.5169C35.6691 35.5636 37.9201 32.6826 40.2634 29.8868C42.6068 27.0911 45.0162 24.6038 47.3398 21.9197C49.2805 19.6752 51.2014 17.3323 52.5348 14.6678C53.723 12.2987 54.5152 9.54887 53.6306 6.94345C53.195 5.67684 52.2774 4.06896 51.1288 3.31425C50.6073 2.96642 49.8218 2.89423 49.2079 2.78923C48.4488 2.65797 47.683 2.57265 46.9173 2.53328C43.927 2.36264 40.9169 2.8811 38.0983 3.83926C31.8933 5.94591 26.223 10.297 22.9686 16.0001C22.3811 17.0304 24.9291 16.781 25.345 16.0526H25.3318Z"
-            stroke="black" />
-        </svg>
-        <!---->
+          <!-- Heart -->
+          <svg class="hidden lg:block absolute top-5 left-[17rem]" width="55" height="58" viewBox="0 0 55 58" fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M25.2527 15.9345C25.2527 10.8287 24.3285 4.54153 19.2589 1.93612C13.8262 -0.859619 7.5024 3.0846 4.34049 7.47508C-2.94049 17.5752 2.94109 30.8516 9.97123 39.3373C14.2949 44.5547 19.9388 48.9583 22.17 55.5735C22.467 56.4595 25.0085 55.7376 24.718 54.891C22.8961 49.503 18.8299 45.4472 15.0342 41.3717C11.2386 37.2962 8.01731 32.9386 5.86536 27.859C3.71341 22.7794 2.73643 17.3061 4.4065 12.0887C5.23824 9.50954 6.7169 7.11413 8.71043 5.26343C10.4267 3.67524 12.7239 2.20519 15.1729 2.50708C18.0839 2.86147 20.2557 5.32906 21.3185 7.88853C22.3812 10.448 22.7047 13.4341 22.7047 16.2495C22.7047 17.2995 25.2527 16.7614 25.2527 15.9345Z"
+              stroke="black" />
+            <path
+              d="M25.3318 16.0526C28.0053 11.3667 32.3554 7.61941 37.3458 5.53902C39.7552 4.53492 42.3494 3.93115 44.97 3.94427C45.6235 3.94427 46.2836 3.98365 46.9305 4.0624C47.4784 4.13459 48.4422 4.14772 48.924 4.43648C49.4059 4.72524 49.901 5.47339 50.2311 5.95247C50.6337 6.53 50.9374 7.16002 51.142 7.82942C51.9143 10.3561 51.0496 13.014 49.8218 15.2519C48.4818 17.6867 46.6995 19.859 44.8842 21.9525C42.7124 24.4529 40.4087 26.8417 38.2699 29.375C36.1312 31.9082 33.9528 34.658 31.9263 37.4012C27.4904 43.4061 23.5099 49.7261 19.9849 56.2954C19.4172 57.352 21.9653 57.0829 22.3613 56.3479C25.6751 50.1658 29.3981 44.2002 33.5238 38.5169C35.6691 35.5636 37.9201 32.6826 40.2634 29.8868C42.6068 27.0911 45.0162 24.6038 47.3398 21.9197C49.2805 19.6752 51.2014 17.3323 52.5348 14.6678C53.723 12.2987 54.5152 9.54887 53.6306 6.94345C53.195 5.67684 52.2774 4.06896 51.1288 3.31425C50.6073 2.96642 49.8218 2.89423 49.2079 2.78923C48.4488 2.65797 47.683 2.57265 46.9173 2.53328C43.927 2.36264 40.9169 2.8811 38.0983 3.83926C31.8933 5.94591 26.223 10.297 22.9686 16.0001C22.3811 17.0304 24.9291 16.781 25.345 16.0526H25.3318Z"
+              stroke="black" />
+          </svg>
+          <!---->
 
-      </h1>
-    </div>
-    <div class=" font-body text-xl font-light space-y-1">
-      <p>I'm a developer with seven+ years experience.</p>
-      <p class="relative">I do full stack, I do design and I do it all with love.
-
-        <svg class="absolute right-0" xmlns="http://www.w3.org/2000/svg" width="55" height="55" viewBox="0 0 55 55"
-          fill="none">
-          <!-- Smiley -->
-          <path fill-rule="evenodd" clip-rule="evenodd"
-            d="M52.0732 17.3084C41.7505 36.5034 21.1297 44.3072 1.97743 33.5009C1.33985 33.1411 0.531324 33.366 0.171489 33.9958C-0.188346 34.6367 0.036575 35.4463 0.674158 35.8062C21.2028 47.3996 43.3427 39.1347 54.4076 18.5679C54.754 17.9269 54.5122 17.1172 53.8679 16.7686C53.2236 16.4312 52.4196 16.6675 52.0732 17.3084Z"
-            fill="black" />
-          <path
-            d="M18.0946 25.2686C20.2269 25.2686 21.9556 23.54 21.9556 21.4077C21.9556 19.2753 20.2269 17.5468 18.0946 17.5468C15.9622 17.5468 14.2336 19.2753 14.2336 21.4077C14.2336 23.54 15.9622 25.2686 18.0946 25.2686Z"
-            fill="black" />
-          <path
-            d="M34.0783 21.1615C36.169 21.1615 37.8638 19.4667 37.8638 17.376C37.8638 15.2854 36.169 13.5906 34.0783 13.5906C31.9876 13.5906 30.2928 15.2854 30.2928 17.376C30.2928 19.4667 31.9876 21.1615 34.0783 21.1615Z"
-            fill="black" />
-        </svg>
-        <!---->
-      </p>
-    </div>
-    <div class="w-full my-4 space-x-1">
-      <a href="#">
-        <font-awesome-icon class="text-3xl" :icon="['fab', 'github']" />
-      </a>
-      <a href="#">
-        <font-awesome-icon class="text-3xl" :icon="['fab', 'linkedin']" />
-      </a>
-      <a href="#">
-        <font-awesome-icon class="text-3xl" icon="envelope" />
-      </a>
-    </div>
-    <div class="w-full flex gap-4">
-      <Button content="Projects" link="#" />
-      <Button content="Resume" link="#" />
-    </div>
-  </section>
+        </h1>
+      </div>
+      <div class=" w-full lg:w-fit lg:self-start  font-body text-base lg:text-xl font-light space-y-1">
+        <p>I'm a developer with seven+ years experience.</p>
+        <p class="relative">I do full stack, I do design and I do it all with love.
+          <svg class=" hidden lg:block absolute right-0" xmlns="http://www.w3.org/2000/svg" width="55" height="55" viewBox="0 0 55 55"
+            fill="none">
+            <!-- Smiley -->
+            <path fill-rule="evenodd" clip-rule="evenodd"
+              d="M52.0732 17.3084C41.7505 36.5034 21.1297 44.3072 1.97743 33.5009C1.33985 33.1411 0.531324 33.366 0.171489 33.9958C-0.188346 34.6367 0.036575 35.4463 0.674158 35.8062C21.2028 47.3996 43.3427 39.1347 54.4076 18.5679C54.754 17.9269 54.5122 17.1172 53.8679 16.7686C53.2236 16.4312 52.4196 16.6675 52.0732 17.3084Z"
+              fill="black" />
+            <path
+              d="M18.0946 25.2686C20.2269 25.2686 21.9556 23.54 21.9556 21.4077C21.9556 19.2753 20.2269 17.5468 18.0946 17.5468C15.9622 17.5468 14.2336 19.2753 14.2336 21.4077C14.2336 23.54 15.9622 25.2686 18.0946 25.2686Z"
+              fill="black" />
+            <path
+              d="M34.0783 21.1615C36.169 21.1615 37.8638 19.4667 37.8638 17.376C37.8638 15.2854 36.169 13.5906 34.0783 13.5906C31.9876 13.5906 30.2928 15.2854 30.2928 17.376C30.2928 19.4667 31.9876 21.1615 34.0783 21.1615Z"
+              fill="black" />
+          </svg>
+          <!---->
+        </p>
+      </div>
+      <div class="w-full my-4 space-x-1">
+        <a :href=heroURLs.github>
+          <font-awesome-icon class="text-3xl transform transition-all duration-200 ease-in-out hover:-translate-y-0.5 opacity-85 hover:opacity-100" :icon="['fab', 'github']" />
+        </a>
+        <a :href=heroURLs.linkedIn>
+          <font-awesome-icon class="text-3xl transform transition-all duration-200 ease-in-out hover:-translate-y-0.5 opacity-85 hover:opacity-100" :icon="['fab', 'linkedin']" />
+        </a>
+        <a :href=heroURLs.email>
+          <font-awesome-icon class="text-3xl transform transition-all duration-200 ease-in-out hover:-translate-y-0.5 opacity-85 hover:opacity-100" icon="envelope" />
+        </a>
+      </div>
+      <div class="w-full flex flex-col md:flex-row items-start gap-4">
+        <Button content="Projects" link="#" />
+        <Button content="Resume" link="#" />
+      </div>
+    </section>
+    <div ref="canvasContainer" class="hidden lg:block absolute top-0 left-1/2 h-3/4 w-1/2 z-50 cursor-grab"></div>
+  </div>
 </template>
