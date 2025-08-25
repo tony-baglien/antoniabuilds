@@ -175,7 +175,7 @@ onUnmounted(() => {
       </div>
       <div class="w-full flex flex-col md:flex-row items-start gap-4">
         <Button content="Projects" link="#" />
-        <Button content="Resume" link="#" />
+        <Button isDisabled content="Resume" link="#" />
       </div>
     </section>
     <div ref="canvasContainer" class="hidden lg:block absolute top-0 left-1/2 h-3/4 w-1/2 z-50 cursor-grab"></div>
