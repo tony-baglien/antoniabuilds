@@ -163,18 +163,18 @@ onUnmounted(() => {
         </p>
       </div>
       <div class="w-full my-4 space-x-1">
-        <a :href=heroURLs.github>
+        <a :href=heroURLs.github target="_blank" rel="noopener noreferrer">
           <font-awesome-icon class="text-3xl transform transition-all duration-200 ease-in-out hover:-translate-y-0.5 opacity-85 hover:opacity-100" :icon="['fab', 'github']" />
         </a>
-        <a :href=heroURLs.linkedIn>
+        <a :href=heroURLs.linkedIn target="_blank" rel="noopener noreferrer">
           <font-awesome-icon class="text-3xl transform transition-all duration-200 ease-in-out hover:-translate-y-0.5 opacity-85 hover:opacity-100" :icon="['fab', 'linkedin']" />
         </a>
-        <a :href=heroURLs.email>
+        <a :href=heroURLs.email target="_blank" rel="noopener noreferrer">
           <font-awesome-icon class="text-3xl transform transition-all duration-200 ease-in-out hover:-translate-y-0.5 opacity-85 hover:opacity-100" icon="envelope" />
         </a>
       </div>
       <div class="w-full flex flex-col md:flex-row items-start gap-4">
-        <Button content="Projects" link="#" />
+        <Button content="Projects" link="#projects" />
         <Button isDisabled content="Resume" link="#" />
       </div>
     </section>

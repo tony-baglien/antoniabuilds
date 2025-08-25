@@ -14,7 +14,9 @@ const props = defineProps({
   <header class="mb-8">
     <div class="flex gap-4 flex-col sm:flex-row font-header text-2xl md:text-4xl pb-4">
       <h2>{{ header }}</h2>
-      <a :href="props.link"
+      <a :href="props.link" 
+        target="_blank" 
+        rel="noopener noreferrer"
         class=" transform transition-all duration-200 ease-in-out hover:-translate-y-0.5 opacity-85 hover:opacity-100">
         <font-awesome-icon :icon="['fab', 'github']" />
       </a>

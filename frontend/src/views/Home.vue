@@ -75,6 +75,8 @@ const gitLinks = {
             simple database back end.</p>
           <div class="flex flex-col md:flex-row align-center gap-4 mt-4">
             <a :href="gitLinks.reactMeals"
+              target="_blank" 
+              rel="noopener noreferrer"
               class="transform transition-all duration-200 ease-in-out hover:-translate-y-0.5 opacity-85 hover:opacity-100">
               <font-awesome-icon class="text-3xl" :icon="['fab', 'github']" />
             </a>
@@ -88,6 +90,8 @@ const gitLinks = {
             filtering</p>
           <div class="flex flex-col md:flex-row align-center gap-4 mt-4">
             <a :href="gitLinks.keyworks"
+              target="_blank" 
+              rel="noopener noreferrer"
               class="transform transition-all duration-200 ease-in-out hover:-translate-y-0.5 opacity-85 hover:opacity-100">
               <font-awesome-icon class="text-3xl" :icon="['fab', 'github']" />
             </a>
@@ -100,6 +104,8 @@ const gitLinks = {
           <p>A charming autotype page inspired by hackertyper.net. Have fun auto typing like a l33t h@x0r</p>
           <div class="flex flex-col md:flex-row align-center gap-4 mt-4">
             <a :href="gitLinks.hacktype"
+              target="_blank" 
+              rel="noopener noreferrer"
               class="transform transition-all duration-200 ease-in-out hover:-translate-y-0.5 opacity-85 hover:opacity-100">
               <font-awesome-icon class="text-3xl" :icon="['fab', 'github']" />
             </a>

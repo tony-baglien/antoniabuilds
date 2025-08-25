@@ -12,7 +12,6 @@ const props = defineProps({
     type: Array,
   }
 });
-console.log(props.icons)
 </script> >
 <template>
   <div class="mb-6">
